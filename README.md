@@ -29,7 +29,7 @@ $ python path/to/export.py --weights yolov5s.pt --img [640,640] --opset 12 --inc
 
 #### 1.yolov5-6.0模型训练注意事项
 + 利用gpu进行训练时会出现torch==false,,,,,可按照该https://blog.csdn.net/qq_42709514/article/details/121168753 
-+当出现using waring cuda0和cuda1的警告时，需要修改的参数
++ 当出现using waring cuda0和cuda1的警告时，需要修改的参数
 + workers==0       
 + batchsize==8
 ```
@@ -60,25 +60,28 @@ python path/to/export.py --weights yolov5s.pt --img [640,640] --opset 12 --inclu
 ```
 
 ```
-python sim onnx  onnx1
+###简化模型
+pip install onnx-simplifier
+python -m onnxsim input_onnx_model output_onnx_model
 ```
 
 ### 4.yolov5-opencv-dnn模型部署
 + 仿照胡工写的dointerfence进行修改，注意事项
-(1)
++ (1)
+```
 如果opencv=4.6时候，此处需要补充
 std::sort(netOutputImg.begin(), netOutputImg.end(), [](Mat& A, Mat& B) {return A.size[1] > B.size[1]; });
-(2)
+```
++ (2)
+```
 当用自己的模型推理时，需要重新封装，将此处修改为自己标签名
 std::vector<std::string> classes = { "0", "1" };
-(3)
-测试自己封装的第一层的dll时，把动态链接库直接转化为windows窗口控制台应用直接运行
-(4)
-测试自己训练模型需要对模型进行简化（onnx）处理
-(5)
-二次封装时需要保证调用dll时候的函数名一致
+```
++ (3)测试自己封装的第一层的dll时，把动态链接库直接转化为windows窗口控制台应用直接运行
++ (4)测试自己训练模型需要对模型进行简化（onnx）处理
++ (5)二次封装时需要保证调用dll时候的函数名一致
 
 
 ### 5.移植工控机上
-(1)安装visual studio
-(2)当出现无法加载dll时，需要将opencv依赖的dll放置windows/systym32/文件下
++ (1)安装visual studio
++ (2)当出现无法加载dll时，需要将opencv依赖的dll放置windows/systym32/文件下
