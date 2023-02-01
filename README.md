@@ -69,7 +69,11 @@ python -m onnxsim input_onnx_model output_onnx_model
 + 仿照胡工写的dointerfence进行修改，注意事项
 + (1)
 ```
-如果opencv=4.6时候，此处需要补充
+如果opencv=4.6时候，此处需要补修改为
+std::vector<cv::Mat> netOutputImg;
+//vector<string> outputLayerName{"345","403", "461","output" };
+//net.forward(netOutputImg, outputLayerName[3]); //获取output的输出
+net.forward(netOutputImg, net.getUnconnectedOutLayersNames());
 std::sort(netOutputImg.begin(), netOutputImg.end(), [](Mat& A, Mat& B) {return A.size[1] > B.size[1]; });
 ```
 + (2)
