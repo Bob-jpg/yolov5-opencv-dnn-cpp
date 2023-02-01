@@ -27,20 +27,24 @@ $ python path/to/export.py --weights yolov5s.pt --img [640,640] --opset 12 --inc
 
 
 
-1.yolov5-6.0模型训练注意事项
-利用gpu进行训练时会出现torch==false,,,,,可按照该https://blog.csdn.net/qq_42709514/article/details/121168753制作
-当出现using waring cuda0和cuda1的警告时，需要修改的参数workers==0        batchsize==8
+#### 1.yolov5-6.0模型训练注意事项
++ 利用gpu进行训练时会出现torch==false,,,,,可按照该https://blog.csdn.net/qq_42709514/article/details/121168753 
++当出现using waring cuda0和cuda1的警告时，需要修改的参数
++ workers==0       
++ batchsize==8
+```
 torch_utils.py 中if cpu:
         os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # force torch.cuda.is_available() = False
     elif device:  # non-cpu device requested
         print(torch.cuda.is_available())        ########################修改此处
         os.environ['CUDA_VISIBLE_DEVICES'] = device  # set environment variable
         assert torch.cuda.is_available(), f'CUDA unavailable, invalid device {device} requested'  # check availability
+```
+#### 2.训练完成后进行检测
 
-2.训练完成后进行检测
 
-
-3.进行模型转化pt--onnx时，需要修改代码,同时需要对模型进行简化处理
+#### 3.进行模型转化pt--onnx时，需要修改代码,同时需要对模型进行简化处理
+```
  parser.add_argument('--include', nargs='+',
                         default=['torchscript'，'onnx'],
                         help='available formats are (torchscript, onnx, coreml, saved_model, pb, tflite, tfjs)')
@@ -50,13 +54,17 @@ parser.add_argument(
         nargs='+',
         default=['onnx'],
         help='torchscript, onnx, openvino, engine, coreml, saved_model, pb, tflite, edgetpu, tfjs, paddle')
-
-
+```
+```
 python path/to/export.py --weights yolov5s.pt --img [640,640] --opset 12 --include onnx
-python sim onnx  onnx1
+```
 
-4.yolov5-opencv-dnn模型部署
-仿照胡工写的dointerfence进行修改，注意事项
+```
+python sim onnx  onnx1
+```
+
+### 4.yolov5-opencv-dnn模型部署
++ 仿照胡工写的dointerfence进行修改，注意事项
 (1)
 如果opencv=4.6时候，此处需要补充
 std::sort(netOutputImg.begin(), netOutputImg.end(), [](Mat& A, Mat& B) {return A.size[1] > B.size[1]; });
@@ -71,6 +79,6 @@ std::vector<std::string> classes = { "0", "1" };
 二次封装时需要保证调用dll时候的函数名一致
 
 
-5.移植工控机上
+### 5.移植工控机上
 (1)安装visual studio
 (2)当出现无法加载dll时，需要将opencv依赖的dll放置windows/systym32/文件下
