@@ -69,7 +69,7 @@ python -m onnxsim input_onnx_model output_onnx_model
 + 仿照胡工写的dointerfence进行修改，注意事项
 + (1)
 ```
-如果opencv=4.6时候，此处需要补修改为
+如果opencv=4.6时候，yolo.cpp此处需要补修改为
 std::vector<cv::Mat> netOutputImg;
 //vector<string> outputLayerName{"345","403", "461","output" };
 //net.forward(netOutputImg, outputLayerName[3]); //获取output的输出
